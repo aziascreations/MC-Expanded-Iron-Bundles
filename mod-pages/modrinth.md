@@ -1,11 +1,9 @@
-<img src="images/items/iron_ingot_bundle.png" align="right" width="96px" height="96px"/>
-
 # Expanded Iron Bundles
 Small mod that provides bundles with more storage space, and new functionalities in the future.
 
 ## Features
 ### Current
-* Recipe for the vanilla bundle
+* Recipe for the vanilla bundle with rabbit hide
 * Multiple variants with more storage space and special properties
   * Copper Bundle (128 slots / 2 stacks)
   * Iron Bundle (256 slots / 4 stacks)
@@ -24,14 +22,25 @@ Small mod that provides bundles with more storage space, and new functionalities
 
 ## Versions
 ### Fabric
-* 1.18 and earlier - Should be comming soon...
-* [1.19 / 1.19.1](https://github.com/aziascreations/MC-Expanded-Iron-Bundles/tree/fabric-1.19)
+✖️ 1.18 and earlier - Should be comming soon...<br>
+✔️ 1.19 & 1.19.1 - Actively supported
 
 ### Forge
-Should be comming soon...
+✖️ 1.18 and earlier - Should be comming soon...<br>
+✖️ 1.19 & 1.19.1 - Will come once Forge supports it
 
-## Links
-TODO
+## Requirements
+### Fabric
+* Fabric API
+* NBT Crafting
+
+### Forge
+N/A
+
+## Known Issues
+* The original bundle is not showing in the creative menu
+* Recipes aren't unlocked when picking up one of the ingredients
+* The bundle's inventory preview shows a cross when the occupancy reaches 64 or more
 
 ## License
-[Apache V2](LICENSE)
+Apache V2
