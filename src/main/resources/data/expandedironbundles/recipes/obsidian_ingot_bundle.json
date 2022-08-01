@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+	"gOg",
+	"OBO",
+	"COC"
+  ],
+  "key": {
+	"g": {
+	  "item": "minecraft:gold_nugget"
+	},
+	"O": {
+	  "item": "minecraft:obsidian"
+	},
+	"B": {
+	  "item": "expandedironbundles:diamond_ingot_bundle"
+	},
+	"C": {
+	  "item": "minecraft:crying_obsidian"
+	}
+  },
+  "result": {
+	"item": "expandedironbundles:obsidian_ingot_bundle",
+	"data": {
+	  "$": "$ i4"
+	}
+  }
+}

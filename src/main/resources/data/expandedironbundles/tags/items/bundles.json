@@ -1,10 +1,12 @@
 {
+  "replace": false,
   "values": [
 	"minecraft:bundle",
 	"expandedironbundles:copper_ingot_bundle",
 	"expandedironbundles:iron_ingot_bundle",
 	"expandedironbundles:gold_ingot_bundle",
 	"expandedironbundles:diamond_ingot_bundle",
+	"expandedironbundles:obsidian_ingot_bundle",
 	"expandedironbundles:netherite_chunk_bundle",
 	"expandedironbundles:netherite_ingot_bundle"
   ]

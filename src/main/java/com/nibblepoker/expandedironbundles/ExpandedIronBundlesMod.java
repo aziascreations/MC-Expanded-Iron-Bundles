@@ -36,9 +36,9 @@ public class ExpandedIronBundlesMod implements ModInitializer {
 	public static final Item DIAMOND_INGOT_BUNDLE = new CustomBundleItem(
 			new FabricItemSettings().group(ExpandedIronBundlesMod.BUNDLE_ITEM_GROUP), 512
 	);
-	//public static final Item OBSIDIAN_INGOT_BUNDLE  = new CustomBundleItem(
-	//		new FabricItemSettings().group(ExpandedIronBundlesMod.BUNDLE_ITEM_GROUP), 768
-	//);
+	public static final Item OBSIDIAN_INGOT_BUNDLE  = new CustomBundleItem(
+			new FabricItemSettings().group(ExpandedIronBundlesMod.BUNDLE_ITEM_GROUP), 768
+	);
 	public static final Item NETHERITE_CHUNK_BUNDLE = new CustomBundleItem(
 			new FabricItemSettings().group(ExpandedIronBundlesMod.BUNDLE_ITEM_GROUP)
 					.rarity(Rarity.UNCOMMON), 896
@@ -55,7 +55,7 @@ public class ExpandedIronBundlesMod implements ModInitializer {
 		Registry.register(Registry.ITEM, new Identifier("expandedironbundles", "iron_ingot_bundle"), IRON_INGOT_BUNDLE);
 		Registry.register(Registry.ITEM, new Identifier("expandedironbundles", "gold_ingot_bundle"), GOLD_INGOT_BUNDLE);
 		Registry.register(Registry.ITEM, new Identifier("expandedironbundles", "diamond_ingot_bundle"), DIAMOND_INGOT_BUNDLE);
-		//Registry.register(Registry.ITEM, new Identifier("expandedironbundles", "obsidian_ingot_bundle"), OBSIDIAN_INGOT_BUNDLE);
+		Registry.register(Registry.ITEM, new Identifier("expandedironbundles", "obsidian_ingot_bundle"), OBSIDIAN_INGOT_BUNDLE);
 		Registry.register(Registry.ITEM, new Identifier("expandedironbundles", "netherite_chunk_bundle"), NETHERITE_CHUNK_BUNDLE);
 		Registry.register(Registry.ITEM, new Identifier("expandedironbundles", "netherite_ingot_bundle"), NETHERITE_INGOT_BUNDLE);
 	}

@@ -1,7 +1,7 @@
 {
   "type": "minecraft:smithing",
   "base": {
-	"item": "expandedironbundles:diamond_ingot_bundle"
+	"item": "expandedironbundles:obsidian_ingot_bundle"
   },
   "addition": {
 	"item": "minecraft:netherite_scrap"

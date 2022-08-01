@@ -35,6 +35,11 @@ public class ExpandedIronBundlesModClient implements ClientModInitializer {
 		);
 		
 		ModelPredicateProviderRegistry.register(
+				ExpandedIronBundlesMod.OBSIDIAN_INGOT_BUNDLE, new Identifier("filled"),
+				(stack, world, entity, seed) -> CustomBundleItem.getAmountFilled(stack)
+		);
+		
+		ModelPredicateProviderRegistry.register(
 				ExpandedIronBundlesMod.NETHERITE_CHUNK_BUNDLE, new Identifier("filled"),
 				(stack, world, entity, seed) -> CustomBundleItem.getAmountFilled(stack)
 		);

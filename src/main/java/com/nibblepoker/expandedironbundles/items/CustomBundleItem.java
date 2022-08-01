@@ -34,6 +34,7 @@ public class CustomBundleItem extends BundleItem {
 	 * NBT key used to store all items nested in the bundle.
 	 */
 	private static final String NBT_ITEMS_KEY = "Items";
+	private static final String NBT_UPGRADES_KEY = "BundleUpgrades";
 	
 	/**
 	 * Represents the maximum stack size an item can normally have in the gave.
@@ -57,9 +58,19 @@ public class CustomBundleItem extends BundleItem {
 	 */
 	public final int maxOccupancy;
 	
+	/**
+	 * Maximum amount of upgrades that can be applied to a bundle at any given time.
+	 */
+	public final int maxUpgrades;
+	
 	public CustomBundleItem(Settings settings, int maxOccupancy) {
+		this(settings, maxOccupancy, 0);
+	}
+	
+	public CustomBundleItem(Settings settings, int maxOccupancy, int maxUpgrades) {
 		super(settings.maxCount(1));
 		this.maxOccupancy = maxOccupancy;
+		this.maxUpgrades = maxUpgrades;
 	}
 	
 	/**
