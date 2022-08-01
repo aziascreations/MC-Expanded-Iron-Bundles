@@ -262,20 +262,21 @@ public class CustomBundleItem extends BundleItem {
 	/**
 	 * Checks if a given item stack can be stacked with another item stack currently present in the given NBT list.
 	 * @param stack ???
-	 * @param items ???
+	 * @param itemsList ???
 	 * @return a NBT compound representing the item stack into which the given stack can be merged, if none are found,
 	 *   an empty NBT compound is returned.
 	 */
-	private static Optional<NbtCompound> canMergeStack(ItemStack stack, NbtList items) {
+	private static Optional<NbtCompound> canMergeStack(ItemStack stack, NbtList itemsList) {
 		if (stack.isOf(Items.BUNDLE)) {
 			return Optional.empty();
 		} else {
-			Stream<NbtElement> nbtStream = items.stream();
+			Stream<NbtElement> nbtStream = itemsList.stream();
 			Objects.requireNonNull(NbtCompound.class);
 			nbtStream = nbtStream.filter(NbtCompound.class::isInstance);
 			Objects.requireNonNull(NbtCompound.class);
-			return nbtStream.map(NbtCompound.class::cast).filter((item) -> {
-				return ItemStack.canCombine(ItemStack.fromNbt(item), stack);
+			return nbtStream.map(NbtCompound.class::cast).filter((itemNbt) -> {
+				return ItemStack.canCombine(NbtHelpers.readLargeItemStackFromNbt(itemNbt), stack);
+				//return ItemStack.canCombine(ItemStack.fromNbt(itemNbt), stack);  //  TODO: Remove this line !
 			}).findFirst();
 		}
 	}
@@ -386,7 +387,8 @@ public class CustomBundleItem extends BundleItem {
 			NbtList nbtList = nbtCompound.getList(NBT_ITEMS_KEY, 10);
 			Stream<NbtElement> nbtStream = nbtList.stream();
 			Objects.requireNonNull(NbtCompound.class);
-			return nbtStream.map(NbtCompound.class::cast).map(ItemStack::fromNbt);
+			//return nbtStream.map(NbtCompound.class::cast).map(ItemStack::fromNbt);  //  TODO: Remove this line !
+			return nbtStream.map(NbtCompound.class::cast).map(NbtHelpers::readLargeItemStackFromNbt);
 		}
 	}
 	
