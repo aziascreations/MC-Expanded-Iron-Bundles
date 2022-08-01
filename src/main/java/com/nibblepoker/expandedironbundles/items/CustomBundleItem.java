@@ -228,7 +228,7 @@ public class CustomBundleItem extends BundleItem {
 				if (optional.isPresent()) {
 					// Grabbing the actual ItemStack from the NbtCompound, and removing it from the existing NBT list.
 					NbtCompound mergedItemStackNbtCompound = optional.get();
-					//ItemStack itemStack = ItemStack.fromNbt(mergedItemStackNbtCompound);
+					//ItemStack itemStack = ItemStack.fromNbt(mergedItemStackNbtCompound);  // TODO: Remove this line !
 					ItemStack itemStack = NbtHelpers.readLargeItemStackFromNbt(mergedItemStackNbtCompound);
 					nbtList.remove(mergedItemStackNbtCompound);
 					
@@ -236,17 +236,20 @@ public class CustomBundleItem extends BundleItem {
 					itemStack.increment(insertableItemCount);
 					
 					// Updating the NbtCompound read from the bundle.
-					//itemStack.writeNbt(mergedItemStackNbtCompound);
+					//itemStack.writeNbt(mergedItemStackNbtCompound);  // TODO: Remove this line !
 					NbtHelpers.writeLargeItemStackNbt(itemStack, mergedItemStackNbtCompound);
 					
 					// Adding back the NBT compound at the start of the list.
 					nbtList.add(0, mergedItemStackNbtCompound);
 				} else {
-					ItemStack itemStack2 = stack.copy();
-					itemStack2.setCount(insertableItemCount);
-					NbtCompound nbtCompound3 = new NbtCompound();
-					itemStack2.writeNbt(nbtCompound3);
-					nbtList.add(0, nbtCompound3);
+					// An existing stack for that item couldn't be found, so we make a copy to store in the bundle.
+					// The process is roughly the same as above.
+					ItemStack stackCopy = stack.copy();
+					stackCopy.setCount(insertableItemCount);
+					NbtCompound stackNbtCompound = new NbtCompound();
+					//stackCopy.writeNbt(nbtCompound3);  // TODO: Remove this line !
+					NbtHelpers.writeLargeItemStackNbt(stackCopy, stackNbtCompound);
+					nbtList.add(0, stackNbtCompound);
 				}
 			}
 			
