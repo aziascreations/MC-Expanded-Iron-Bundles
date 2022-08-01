@@ -1,5 +1,6 @@
 package com.nibblepoker.expandedironbundles.items;
 
+import com.nibblepoker.expandedironbundles.helpers.NbtHelpers;
 import net.minecraft.client.item.BundleTooltipData;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.item.TooltipData;
@@ -101,6 +102,7 @@ public class CustomBundleItem extends BundleItem {
 		ItemStack targetItemStack = slot.getStack();
 		
 		if (targetItemStack.isEmpty()) {
+			// We remove an item from the bundle.
 			this.playRemoveOneSound(player);
 			removeFirstStack(stack).ifPresent((removedStack) -> {
 				addToBundle(
@@ -110,6 +112,7 @@ public class CustomBundleItem extends BundleItem {
 				);
 			});
 		} else if (targetItemStack.getItem().canBeNested()) {
+			// We attempt to add an item to the bundle.
 			int insertableItemCount = (this.maxOccupancy - getBundleOccupancy(stack)) / getItemOccupancy(targetItemStack);
 			
 			int itemAddedCount = addToBundle(
@@ -141,11 +144,13 @@ public class CustomBundleItem extends BundleItem {
 	public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
 		if (clickType == ClickType.RIGHT && slot.canTakePartial(player)) {
 			if (otherStack.isEmpty()) {
+				// We remove an item from the bundle.
 				removeFirstStack(stack).ifPresent((itemStack) -> {
 					this.playRemoveOneSound(player);
 					cursorStackReference.set(itemStack);
 				});
 			} else {
+				// We attempt to add an item to the bundle.
 				int i = addToBundle(stack, otherStack, this.maxOccupancy);
 				if (i > 0) {
 					this.playInsertSound(player);
@@ -203,7 +208,9 @@ public class CustomBundleItem extends BundleItem {
 	 * @return The amount of items that were actually inserted into the bundle.
 	 */
 	private static int addToBundle(ItemStack bundle, ItemStack stack, int bundleMaxOccupancy) {
+		// Checking if there is some space left and if the item itself can be inserted in a bundle
 		if (!stack.isEmpty() && stack.getItem().canBeNested()) {
+			// Preparing the NBT compound that will keep all the item data.
 			NbtCompound nbtCompound = bundle.getOrCreateNbt();
 			if (!nbtCompound.contains(NBT_ITEMS_KEY)) {
 				nbtCompound.put(NBT_ITEMS_KEY, new NbtList());
@@ -215,21 +222,35 @@ public class CustomBundleItem extends BundleItem {
 			);
 			
 			if (insertableItemCount != 0) {
+				// Grabbing the list of all item stacks as NBT.
 				NbtList nbtList = nbtCompound.getList(NBT_ITEMS_KEY, 10);
+				
+				// Grabbing the item stack's NBT compound into which the given item stack can be merged.
+				// Will be empty if no other stack was found and a new one needs to be created for it.
 				Optional<NbtCompound> optional = canMergeStack(stack, nbtList);
+				
 				if (optional.isPresent()) {
-					NbtCompound nbtCompound2 = (NbtCompound)optional.get();
-					ItemStack itemStack = ItemStack.fromNbt(nbtCompound2);
+					// Grabbing the actual ItemStack from the NbtCompound, and removing it from the existing NBT list.
+					NbtCompound mergedItemStackNbtCompound = optional.get();
+					ItemStack itemStack = NbtHelpers.readLargeItemStackFromNbt(mergedItemStackNbtCompound);
+					nbtList.remove(mergedItemStackNbtCompound);
+					
+					// Incrementing the stack's size
 					itemStack.increment(insertableItemCount);
-					itemStack.writeNbt(nbtCompound2);
-					nbtList.remove(nbtCompound2);
-					nbtList.add(0, nbtCompound2);
+					
+					// Updating the NbtCompound read from the bundle.
+					NbtHelpers.writeLargeItemStackNbt(itemStack, mergedItemStackNbtCompound);
+					
+					// Adding back the NBT compound at the start of the list.
+					nbtList.add(0, mergedItemStackNbtCompound);
 				} else {
-					ItemStack itemStack2 = stack.copy();
-					itemStack2.setCount(insertableItemCount);
-					NbtCompound nbtCompound3 = new NbtCompound();
-					itemStack2.writeNbt(nbtCompound3);
-					nbtList.add(0, nbtCompound3);
+					// An existing stack for that item couldn't be found, so we make a copy to store in the bundle.
+					// The process is roughly the same as above.
+					ItemStack stackCopy = stack.copy();
+					stackCopy.setCount(insertableItemCount);
+					NbtCompound stackNbtCompound = new NbtCompound();
+					NbtHelpers.writeLargeItemStackNbt(stackCopy, stackNbtCompound);
+					nbtList.add(0, stackNbtCompound);
 				}
 			}
 			
@@ -240,21 +261,22 @@ public class CustomBundleItem extends BundleItem {
 	}
 	
 	/**
-	 * ???
+	 * Checks if a given item stack can be stacked with another item stack currently present in the given NBT list.
 	 * @param stack ???
-	 * @param items ???
-	 * @return ???
+	 * @param itemsList ???
+	 * @return a NBT compound representing the item stack into which the given stack can be merged, if none are found,
+	 *   an empty NBT compound is returned.
 	 */
-	private static Optional<NbtCompound> canMergeStack(ItemStack stack, NbtList items) {
+	private static Optional<NbtCompound> canMergeStack(ItemStack stack, NbtList itemsList) {
 		if (stack.isOf(Items.BUNDLE)) {
 			return Optional.empty();
 		} else {
-			Stream<NbtElement> nbtStream = items.stream();
+			Stream<NbtElement> nbtStream = itemsList.stream();
 			Objects.requireNonNull(NbtCompound.class);
 			nbtStream = nbtStream.filter(NbtCompound.class::isInstance);
 			Objects.requireNonNull(NbtCompound.class);
-			return nbtStream.map(NbtCompound.class::cast).filter((item) -> {
-				return ItemStack.canCombine(ItemStack.fromNbt(item), stack);
+			return nbtStream.map(NbtCompound.class::cast).filter((itemNbt) -> {
+				return ItemStack.canCombine(NbtHelpers.readLargeItemStackFromNbt(itemNbt), stack);
 			}).findFirst();
 		}
 	}
@@ -304,15 +326,19 @@ public class CustomBundleItem extends BundleItem {
 	 */
 	private static Optional<ItemStack> removeFirstStack(ItemStack stack) {
 		NbtCompound nbtCompound = stack.getOrCreateNbt();
+		
 		if (!nbtCompound.contains(NBT_ITEMS_KEY)) {
+			// No items were stored in the bundle
 			return Optional.empty();
 		} else {
 			NbtList nbtList = nbtCompound.getList(NBT_ITEMS_KEY, 10);
 			if (nbtList.isEmpty()) {
+				// No items were stored in the list, this shouldn't normally happen, probably...
 				return Optional.empty();
 			} else {
-				NbtCompound nbtCompound2 = nbtList.getCompound(0);
-				ItemStack itemStack = ItemStack.fromNbt(nbtCompound2);
+				NbtCompound extractedItemNbtCompound = nbtList.getCompound(0);
+				ItemStack itemStack = NbtHelpers.readLargeItemStackFromNbt(extractedItemNbtCompound);
+				
 				nbtList.remove(0);
 				if (nbtList.isEmpty()) {
 					stack.removeSubNbt(NBT_ITEMS_KEY);
@@ -341,7 +367,7 @@ public class CustomBundleItem extends BundleItem {
 				
 				for(int i = 0; i < bundleNbtItemList.size(); ++i) {
 					NbtCompound droppedItemNbtCompound = bundleNbtItemList.getCompound(i);
-					ItemStack itemStack = ItemStack.fromNbt(droppedItemNbtCompound);
+					ItemStack itemStack = NbtHelpers.readLargeItemStackFromNbt(droppedItemNbtCompound);
 					player.dropItem(itemStack, true);
 				}
 			}
@@ -365,7 +391,7 @@ public class CustomBundleItem extends BundleItem {
 			NbtList nbtList = nbtCompound.getList(NBT_ITEMS_KEY, 10);
 			Stream<NbtElement> nbtStream = nbtList.stream();
 			Objects.requireNonNull(NbtCompound.class);
-			return nbtStream.map(NbtCompound.class::cast).map(ItemStack::fromNbt);
+			return nbtStream.map(NbtCompound.class::cast).map(NbtHelpers::readLargeItemStackFromNbt);
 		}
 	}
 	
