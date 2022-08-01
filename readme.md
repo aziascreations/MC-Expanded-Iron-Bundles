@@ -4,7 +4,7 @@
 Small mod that provides bundles with more storage space, and new functionalities in the future.
 
 [See on Modrinth](https://modrinth.com/mod/expanded-iron-bundles)<br>
-[See on CurseForge](https://modrinth.com/mod/expanded-iron-bundles)
+[See on CurseForge](https://www.curseforge.com/minecraft/mc-mods/expanded-iron-bundles-fabric)
 
 ## Current features
 * Recipe for the vanilla bundle
