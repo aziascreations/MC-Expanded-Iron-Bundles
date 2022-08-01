@@ -232,7 +232,6 @@ public class CustomBundleItem extends BundleItem {
 				if (optional.isPresent()) {
 					// Grabbing the actual ItemStack from the NbtCompound, and removing it from the existing NBT list.
 					NbtCompound mergedItemStackNbtCompound = optional.get();
-					//ItemStack itemStack = ItemStack.fromNbt(mergedItemStackNbtCompound);  // TODO: Remove this line !
 					ItemStack itemStack = NbtHelpers.readLargeItemStackFromNbt(mergedItemStackNbtCompound);
 					nbtList.remove(mergedItemStackNbtCompound);
 					
@@ -240,7 +239,6 @@ public class CustomBundleItem extends BundleItem {
 					itemStack.increment(insertableItemCount);
 					
 					// Updating the NbtCompound read from the bundle.
-					//itemStack.writeNbt(mergedItemStackNbtCompound);  // TODO: Remove this line !
 					NbtHelpers.writeLargeItemStackNbt(itemStack, mergedItemStackNbtCompound);
 					
 					// Adding back the NBT compound at the start of the list.
@@ -251,7 +249,6 @@ public class CustomBundleItem extends BundleItem {
 					ItemStack stackCopy = stack.copy();
 					stackCopy.setCount(insertableItemCount);
 					NbtCompound stackNbtCompound = new NbtCompound();
-					//stackCopy.writeNbt(nbtCompound3);  // TODO: Remove this line !
 					NbtHelpers.writeLargeItemStackNbt(stackCopy, stackNbtCompound);
 					nbtList.add(0, stackNbtCompound);
 				}
@@ -280,7 +277,6 @@ public class CustomBundleItem extends BundleItem {
 			Objects.requireNonNull(NbtCompound.class);
 			return nbtStream.map(NbtCompound.class::cast).filter((itemNbt) -> {
 				return ItemStack.canCombine(NbtHelpers.readLargeItemStackFromNbt(itemNbt), stack);
-				//return ItemStack.canCombine(ItemStack.fromNbt(itemNbt), stack);  //  TODO: Remove this line !
 			}).findFirst();
 		}
 	}
@@ -341,7 +337,6 @@ public class CustomBundleItem extends BundleItem {
 				return Optional.empty();
 			} else {
 				NbtCompound extractedItemNbtCompound = nbtList.getCompound(0);
-				// ItemStack itemStack = ItemStack.fromNbt(extractedItemNbtCompound); //  TODO: Remove this line !
 				ItemStack itemStack = NbtHelpers.readLargeItemStackFromNbt(extractedItemNbtCompound);
 				
 				nbtList.remove(0);
@@ -372,7 +367,6 @@ public class CustomBundleItem extends BundleItem {
 				
 				for(int i = 0; i < bundleNbtItemList.size(); ++i) {
 					NbtCompound droppedItemNbtCompound = bundleNbtItemList.getCompound(i);
-					//ItemStack itemStack = ItemStack.fromNbt(droppedItemNbtCompound);  //  TODO: Remove this line !
 					ItemStack itemStack = NbtHelpers.readLargeItemStackFromNbt(droppedItemNbtCompound);
 					player.dropItem(itemStack, true);
 				}
@@ -397,7 +391,6 @@ public class CustomBundleItem extends BundleItem {
 			NbtList nbtList = nbtCompound.getList(NBT_ITEMS_KEY, 10);
 			Stream<NbtElement> nbtStream = nbtList.stream();
 			Objects.requireNonNull(NbtCompound.class);
-			//return nbtStream.map(NbtCompound.class::cast).map(ItemStack::fromNbt);  //  TODO: Remove this line !
 			return nbtStream.map(NbtCompound.class::cast).map(NbtHelpers::readLargeItemStackFromNbt);
 		}
 	}

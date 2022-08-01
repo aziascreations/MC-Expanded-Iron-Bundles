@@ -3,7 +3,7 @@ package com.nibblepoker.expandedironbundles.helpers;
 import com.nibblepoker.expandedironbundles.ExpandedIronBundlesMod;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -30,25 +30,42 @@ public class NbtHelpers {
 		ItemStack returnedItemStack = EMPTY;
 		
 		try {
+			// Grabbing an item instance from the registry by using the id in the NBT.
 			Item readItem = Registry.ITEM.get(new Identifier(nbt.getString("id")));
 			
 			// Will return the actual amount, or 0 if not found with that data type.
-			byte itemCountByte = nbt.getByte("Count");
-			int itemCountInt = nbt.getInt("Count");
+			// The value of '1' is used as a fallback and to shut Intellij up.
+			int itemCount = 1;
 			
-			// Attempting to read vanilla/legacy byte variables
-			if (itemCountByte > 0) {
-				itemCountInt = itemCountByte;
-			} else if(itemCountByte < 0) {
-				// Fixing items that possibly went in the negatives.
-				itemCountInt = 256 - Math.abs((int) itemCountByte);
+			try {
+				NbtElement countNbtElement = nbt.get("Count");
+				if (countNbtElement != null) {
+					if (countNbtElement.getClass().equals(NbtInt.class)) {
+						// No transformation should be done !
+						itemCount = nbt.getInt("Count");
+					} else if (countNbtElement.getClass().equals(NbtByte.class)) {
+						// Attempting to read vanilla/legacy byte variables
+						byte itemCountByte = nbt.getByte("Count");
+						
+						if (itemCountByte > 0) {
+							itemCount = itemCountByte;
+						} else if(itemCountByte < 0) {
+							// Fixing items that possibly went in the negatives.
+							itemCount = 256 - Math.abs((int) itemCountByte);
+						}
+					} else {
+						itemCount = 0;
+					}
+				} else {
+					itemCount = 0;
+				}
+			} catch(NullPointerException err) {
+				itemCount = 0;
 			}
-			
-			// We can now assume that "itemCountInt" has the right stack size.
 			
 			// Preparing the ItemStack.
 			// This pretty much a copy of the "ItemStack(NbtCompound nbt)" constructor.
-			ItemStack itemStack = new ItemStack(readItem, itemCountInt);
+			ItemStack itemStack = new ItemStack(readItem, itemCount);
 			
 			if (nbt.contains("tag", 10)) {
 				itemStack.setNbt(nbt.getCompound("tag"));
