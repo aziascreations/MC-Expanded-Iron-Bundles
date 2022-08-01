@@ -102,6 +102,7 @@ public class CustomBundleItem extends BundleItem {
 		ItemStack targetItemStack = slot.getStack();
 		
 		if (targetItemStack.isEmpty()) {
+			// We remove an item from the bundle.
 			this.playRemoveOneSound(player);
 			removeFirstStack(stack).ifPresent((removedStack) -> {
 				addToBundle(
@@ -111,6 +112,7 @@ public class CustomBundleItem extends BundleItem {
 				);
 			});
 		} else if (targetItemStack.getItem().canBeNested()) {
+			// We attempt to add an item to the bundle.
 			int insertableItemCount = (this.maxOccupancy - getBundleOccupancy(stack)) / getItemOccupancy(targetItemStack);
 			
 			int itemAddedCount = addToBundle(
@@ -142,11 +144,13 @@ public class CustomBundleItem extends BundleItem {
 	public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
 		if (clickType == ClickType.RIGHT && slot.canTakePartial(player)) {
 			if (otherStack.isEmpty()) {
+				// We remove an item from the bundle.
 				removeFirstStack(stack).ifPresent((itemStack) -> {
 					this.playRemoveOneSound(player);
 					cursorStackReference.set(itemStack);
 				});
 			} else {
+				// We attempt to add an item to the bundle.
 				int i = addToBundle(stack, otherStack, this.maxOccupancy);
 				if (i > 0) {
 					this.playInsertSound(player);
@@ -326,15 +330,20 @@ public class CustomBundleItem extends BundleItem {
 	 */
 	private static Optional<ItemStack> removeFirstStack(ItemStack stack) {
 		NbtCompound nbtCompound = stack.getOrCreateNbt();
+		
 		if (!nbtCompound.contains(NBT_ITEMS_KEY)) {
+			// No items were stored in the bundle
 			return Optional.empty();
 		} else {
 			NbtList nbtList = nbtCompound.getList(NBT_ITEMS_KEY, 10);
 			if (nbtList.isEmpty()) {
+				// No items were stored in the list, this shouldn't normally happen, probably...
 				return Optional.empty();
 			} else {
-				NbtCompound nbtCompound2 = nbtList.getCompound(0);
-				ItemStack itemStack = ItemStack.fromNbt(nbtCompound2);
+				NbtCompound extractedItemNbtCompound = nbtList.getCompound(0);
+				// ItemStack itemStack = ItemStack.fromNbt(extractedItemNbtCompound); //  TODO: Remove this line !
+				ItemStack itemStack = NbtHelpers.readLargeItemStackFromNbt(extractedItemNbtCompound);
+				
 				nbtList.remove(0);
 				if (nbtList.isEmpty()) {
 					stack.removeSubNbt(NBT_ITEMS_KEY);
@@ -363,7 +372,8 @@ public class CustomBundleItem extends BundleItem {
 				
 				for(int i = 0; i < bundleNbtItemList.size(); ++i) {
 					NbtCompound droppedItemNbtCompound = bundleNbtItemList.getCompound(i);
-					ItemStack itemStack = ItemStack.fromNbt(droppedItemNbtCompound);
+					//ItemStack itemStack = ItemStack.fromNbt(droppedItemNbtCompound);  //  TODO: Remove this line !
+					ItemStack itemStack = NbtHelpers.readLargeItemStackFromNbt(droppedItemNbtCompound);
 					player.dropItem(itemStack, true);
 				}
 			}
