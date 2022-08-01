@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "expandedironbundles",
-  "version": "0.0.2+mc1.19-fabric",
+  "version": "0.0.3+mc1.19-fabric",
 
   "name": "Expanded Iron Bundles",
   "description": "Provides bundles with more storage space, and new functionalities in the future.",
