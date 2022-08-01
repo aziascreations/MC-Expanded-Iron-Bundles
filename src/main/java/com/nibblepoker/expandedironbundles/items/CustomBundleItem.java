@@ -1,5 +1,6 @@
 package com.nibblepoker.expandedironbundles.items;
 
+import com.nibblepoker.expandedironbundles.helpers.NbtHelpers;
 import net.minecraft.client.item.BundleTooltipData;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.item.TooltipData;
@@ -203,7 +204,9 @@ public class CustomBundleItem extends BundleItem {
 	 * @return The amount of items that were actually inserted into the bundle.
 	 */
 	private static int addToBundle(ItemStack bundle, ItemStack stack, int bundleMaxOccupancy) {
+		// Checking if there is some space left and if the item itself can be inserted in a bundle
 		if (!stack.isEmpty() && stack.getItem().canBeNested()) {
+			// Preparing the NBT compound that will keep all the item data.
 			NbtCompound nbtCompound = bundle.getOrCreateNbt();
 			if (!nbtCompound.contains(NBT_ITEMS_KEY)) {
 				nbtCompound.put(NBT_ITEMS_KEY, new NbtList());
@@ -215,15 +218,29 @@ public class CustomBundleItem extends BundleItem {
 			);
 			
 			if (insertableItemCount != 0) {
+				// Grabbing the list of all item stacks as NBT.
 				NbtList nbtList = nbtCompound.getList(NBT_ITEMS_KEY, 10);
+				
+				// Grabbing the item stack's NBT compound into which the given item stack can be merged.
+				// Will be empty if no other stack was found and a new one needs to be created for it.
 				Optional<NbtCompound> optional = canMergeStack(stack, nbtList);
+				
 				if (optional.isPresent()) {
-					NbtCompound nbtCompound2 = (NbtCompound)optional.get();
-					ItemStack itemStack = ItemStack.fromNbt(nbtCompound2);
+					// Grabbing the actual ItemStack from the NbtCompound, and removing it from the existing NBT list.
+					NbtCompound mergedItemStackNbtCompound = optional.get();
+					//ItemStack itemStack = ItemStack.fromNbt(mergedItemStackNbtCompound);
+					ItemStack itemStack = NbtHelpers.readLargeItemStackFromNbt(mergedItemStackNbtCompound);
+					nbtList.remove(mergedItemStackNbtCompound);
+					
+					// Incrementing the stack's size
 					itemStack.increment(insertableItemCount);
-					itemStack.writeNbt(nbtCompound2);
-					nbtList.remove(nbtCompound2);
-					nbtList.add(0, nbtCompound2);
+					
+					// Updating the NbtCompound read from the bundle.
+					//itemStack.writeNbt(mergedItemStackNbtCompound);
+					NbtHelpers.writeLargeItemStackNbt(itemStack, mergedItemStackNbtCompound);
+					
+					// Adding back the NBT compound at the start of the list.
+					nbtList.add(0, mergedItemStackNbtCompound);
 				} else {
 					ItemStack itemStack2 = stack.copy();
 					itemStack2.setCount(insertableItemCount);
@@ -240,10 +257,11 @@ public class CustomBundleItem extends BundleItem {
 	}
 	
 	/**
-	 * ???
+	 * Checks if a given item stack can be stacked with another item stack currently present in the given NBT list.
 	 * @param stack ???
 	 * @param items ???
-	 * @return ???
+	 * @return a NBT compound representing the item stack into which the given stack can be merged, if none are found,
+	 *   an empty NBT compound is returned.
 	 */
 	private static Optional<NbtCompound> canMergeStack(ItemStack stack, NbtList items) {
 		if (stack.isOf(Items.BUNDLE)) {
