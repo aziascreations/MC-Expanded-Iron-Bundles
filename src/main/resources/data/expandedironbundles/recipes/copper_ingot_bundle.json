@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+	"ccc",
+	"cBc",
+	"ccc"
+  ],
+  "key": {
+	"c": {
+	  "item": "minecraft:copper_ingot"
+	},
+	"B": {
+	  "item": "minecraft:bundle"
+	}
+  },
+  "result": {
+	"item": "expandedironbundles:copper_ingot_bundle",
+	"data": {
+	  "$": "$ i4"
+	}
+  }
+}

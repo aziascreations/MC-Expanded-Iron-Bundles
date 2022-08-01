@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+	"ggg",
+	"gBg",
+	"ggg"
+  ],
+  "key": {
+	"g": {
+	  "item": "minecraft:gold_ingot"
+	},
+	"B": {
+	  "item": "expandedironbundles:iron_ingot_bundle"
+	}
+  },
+  "result": {
+	"item": "expandedironbundles:gold_ingot_bundle",
+	"data": {
+	  "$": "$ i4"
+	}
+  }
+}

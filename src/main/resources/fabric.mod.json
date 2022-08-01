@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "expandedironbundles",
+  "version": "0.0.1+mc1.19-fabric",
+
+  "name": "Expanded Iron Bundles",
+  "description": "Provides bundles with more storage space, and new functionalities in the future.",
+  "authors": [
+    "Herwin Bozet"
+  ],
+  "contact": {
+    "homepage": "https://github.com/aziascreations/MC-Expanded-Iron-Bundles",
+    "sources": "https://github.com/aziascreations/MC-Expanded-Iron-Bundles"
+  },
+
+  "license": "Apache V2",
+  "icon": "assets/expandedironbundles/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.nibblepoker.expandedironbundles.ExpandedIronBundlesMod"
+    ],
+    "client": [
+      "com.nibblepoker.expandedironbundles.ExpandedIronBundlesModClient"
+    ]
+  },
+  "mixins": [
+    "expandedironbundles.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.14.6",
+    "fabric": "*",
+    "minecraft": "~1.19",
+    "java": ">=17",
+    "nbtcrafting": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}

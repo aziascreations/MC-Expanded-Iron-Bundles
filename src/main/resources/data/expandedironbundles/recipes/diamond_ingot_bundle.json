@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+	"ddd",
+	"dBd",
+	"ddd"
+  ],
+  "key": {
+	"d": {
+	  "item": "minecraft:diamond"
+	},
+	"B": {
+	  "item": "expandedironbundles:gold_ingot_bundle"
+	}
+  },
+  "result": {
+	"item": "expandedironbundles:diamond_ingot_bundle",
+	"data": {
+	  "$": "$ i4"
+	}
+  }
+}
