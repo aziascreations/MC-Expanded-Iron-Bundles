@@ -33,8 +33,12 @@ Small mod that provides bundles with more storage space, and new functionalities
 * More bundles with special mechanics (i.e.: Ender Bundle, ...)
 * More bundle upgrades
 * Improved bundle mechanics (i.e.: Swapping last inserted item, ...)
+* Support for modded ores and modded clones of existing ores
 
 ### New Bundle Mechanics
+
+<img src="images/items/bundle_filter_set.png" align="right" width="64px" height="64px"/>
+<img src="images/items/bundle_filter_unset.png" align="right" width="64px" height="64px"/>
 
 #### Filters
 Filters can be defined by right-clicking on an item or block while holding any set or unset filter in any inventory-like container.<br>
@@ -47,6 +51,12 @@ A blank filter will remove any filter from a bundle, and any item that occupy sp
 #### Upgrades
 Upgrade are permanent modifications that can be applied in a limited number to a bundle in order to change its behaviour.<br>
 These upgrades are added through the <i>Smithing Table</i>.
+
+#### Overflowing Bundles
+Any bundle that may contain more items than it should be able to will be considered as overflowing.<br>
+Overflowing bundles will have a redish item bar, a different texture and won't be able to insert any more items.
+
+This type of bundle can be "created" when you reduce the maximum size of a bundle, or when you remove a filter from a bundle.
 
 ### Fabric source code
 * [1.19 / 1.19.1](https://github.com/aziascreations/MC-Expanded-Iron-Bundles/tree/fabric-1.19) - *'fabric-1.19'* branch
