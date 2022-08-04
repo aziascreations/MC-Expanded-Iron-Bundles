@@ -1,0 +1,22 @@
+{
+  "name": "Copper Bundle",
+  "icon": "expandedironbundles:copper_ingot_bundle",
+  "category": "expandedironbundles:bundles_category",
+  "read_by_default": true,
+  "sortnum": 5,
+  "pages": [
+	{
+	  "type": "patchouli:spotlight",
+	  "item": "expandedironbundles:copper_ingot_bundle",
+	  "title": "Copper Bundle",
+	  "link_recipe ": true,
+	  "text": "The copper bundle is obtained by upgrading a regular bundle with copper.$(br2)This bundle has 128 slots or 2 stacks of storage."
+	},
+	{
+	  "type": "patchouli:crafting",
+	  "title": "Hello world !",
+	  "recipe ": "expandedironbundles:copper_ingot_bundle",
+	  "text": "This craft will retain any stored items and filter applied to the bundle.$(br2)The bundle can also be ??? further into an Iron Bundle."
+	}
+  ]
+}

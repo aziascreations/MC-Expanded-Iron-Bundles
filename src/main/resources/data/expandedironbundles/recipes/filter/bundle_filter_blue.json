@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:ink_sac"
+        },
+        {
+            "item": "minecraft:feather"
+        },
+        {
+            "item": "minecraft:paper"
+        },
+        {
+            "item": "minecraft:blue_dye"
+        }
+    ],
+    "result": {
+        "item": "expandedironbundles:bundle_filter",
+        "count": 1
+    },
+    "group": "bundle_filter_craft"
+}

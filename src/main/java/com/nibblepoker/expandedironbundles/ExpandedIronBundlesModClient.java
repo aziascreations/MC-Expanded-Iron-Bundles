@@ -1,6 +1,7 @@
 package com.nibblepoker.expandedironbundles;
 
-import com.nibblepoker.expandedironbundles.items.CustomBundleItem;
+import com.nibblepoker.expandedironbundles.helpers.nbt.BundleFilterNbtHelpers;
+import com.nibblepoker.expandedironbundles.helpers.nbt.StorageNbtHelpers;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.util.Identifier;
@@ -16,37 +17,42 @@ public class ExpandedIronBundlesModClient implements ClientModInitializer {
 		
 		ModelPredicateProviderRegistry.register(
 				ExpandedIronBundlesMod.COPPER_INGOT_BUNDLE, new Identifier("filled"),
-				(stack, world, entity, seed) -> CustomBundleItem.getAmountFilled(stack)
+				(stack, world, entity, seed) -> StorageNbtHelpers.getAmountFilled(stack)
 		);
 		
 		ModelPredicateProviderRegistry.register(
 				ExpandedIronBundlesMod.IRON_INGOT_BUNDLE, new Identifier("filled"),
-				(stack, world, entity, seed) -> CustomBundleItem.getAmountFilled(stack)
+				(stack, world, entity, seed) -> StorageNbtHelpers.getAmountFilled(stack)
 		);
 		
 		ModelPredicateProviderRegistry.register(
 				ExpandedIronBundlesMod.GOLD_INGOT_BUNDLE, new Identifier("filled"),
-				(stack, world, entity, seed) -> CustomBundleItem.getAmountFilled(stack)
+				(stack, world, entity, seed) -> StorageNbtHelpers.getAmountFilled(stack)
 		);
 		
 		ModelPredicateProviderRegistry.register(
 				ExpandedIronBundlesMod.DIAMOND_INGOT_BUNDLE, new Identifier("filled"),
-				(stack, world, entity, seed) -> CustomBundleItem.getAmountFilled(stack)
+				(stack, world, entity, seed) -> StorageNbtHelpers.getAmountFilled(stack)
 		);
 		
 		ModelPredicateProviderRegistry.register(
 				ExpandedIronBundlesMod.OBSIDIAN_INGOT_BUNDLE, new Identifier("filled"),
-				(stack, world, entity, seed) -> CustomBundleItem.getAmountFilled(stack)
+				(stack, world, entity, seed) -> StorageNbtHelpers.getAmountFilled(stack)
 		);
 		
 		ModelPredicateProviderRegistry.register(
 				ExpandedIronBundlesMod.NETHERITE_CHUNK_BUNDLE, new Identifier("filled"),
-				(stack, world, entity, seed) -> CustomBundleItem.getAmountFilled(stack)
+				(stack, world, entity, seed) -> StorageNbtHelpers.getAmountFilled(stack)
 		);
 		
 		ModelPredicateProviderRegistry.register(
 				ExpandedIronBundlesMod.NETHERITE_INGOT_BUNDLE, new Identifier("filled"),
-				(stack, world, entity, seed) -> CustomBundleItem.getAmountFilled(stack)
+				(stack, world, entity, seed) -> StorageNbtHelpers.getAmountFilled(stack)
+		);
+		
+		ModelPredicateProviderRegistry.register(
+				ExpandedIronBundlesMod.BUNDLE_FILTER, new Identifier("filled"),
+				(stack, world, entity, seed) -> BundleFilterNbtHelpers.getFilledPredicateValue(stack)
 		);
 	}
 }

@@ -11,5 +11,12 @@
   "item.expandedironbundles.obsidian_ingot_bundle": "Obsidian Bundle",
   "item.expandedironbundles.netherite_chunk_bundle": "Ancient Debris Bundle",
   "item.expandedironbundles.netherite_ingot_bundle": "Netherite Bundle",
-  "itemGroup.expandedironbundles.main": "Bundles"
+  "item.expandedironbundles.bundle_filter": "Bundle Filter",
+  "item.expandedironbundles.debug_joystick": "Debugging Joystick",
+  "itemGroup.expandedironbundles.main": "Bundles",
+  "tooltip.expandedironbundles.bundle_filter_unset": "Filter: §oNone§r",
+  "tooltip.expandedironbundles.bundle_filter_set": "Filter: §o%s§r",
+  "item.expandedironbundles.bundle.fullness.occupancy": "Occupancy: §o%s/%s§r",
+  "item.expandedironbundles.bundle.fullness.unfiltered": "Filter: §oNone§r",
+  "item.expandedironbundles.bundle.fullness.filtered": "Filter: §o%s§r"
 }

@@ -1,6 +1,6 @@
 package com.nibblepoker.expandedironbundles.mixin;
 
-import com.nibblepoker.expandedironbundles.items.CustomBundleItem;
+import com.nibblepoker.expandedironbundles.helpers.nbt.StorageNbtHelpers;
 import net.minecraft.item.BundleItem;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,7 +24,7 @@ public class BundleOccupancyGetterMixin {
 	private static void getItemOccupancy(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
 		if (stack.getItem() instanceof BundleItem) {
 			cir.setReturnValue(
-					CustomBundleItem.NESTED_BUNDLE_BASE_OCCUPANCY + CustomBundleItem.getBundleOccupancy(stack)
+					StorageNbtHelpers.NESTED_BUNDLE_BASE_OCCUPANCY + StorageNbtHelpers.getStorageItemOccupancy(stack)
 			);
 		}
 	}

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+	{
+	  "item": "expandedironbundles:iron_ingot_bundle"
+	},
+	{
+	  "item": "expandedironbundles:bundle_filter",
+	  "remainder": {
+		"item": "expandedironbundles:bundle_filter",
+		"data": {
+		  "Filter": "$i1.Filter"
+		}
+	  }
+	}
+  ],
+  "result": {
+	"item": "expandedironbundles:iron_ingot_bundle",
+	"data": {
+	  "$": "$ i0",
+	  "Filter": "$i1.Filter"
+	}
+  }
+}

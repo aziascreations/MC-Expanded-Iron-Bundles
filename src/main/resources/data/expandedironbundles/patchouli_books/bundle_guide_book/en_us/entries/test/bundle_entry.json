@@ -1,0 +1,46 @@
+{
+  "name": "Bundle",
+  "icon": "minecraft:bundle",
+  "category": "expandedironbundles:bundles_category",
+  "read_by_default": true,
+  "sortnum": 0,
+  "pages": [
+	{
+	  "type": "patchouli:spotlight",
+	  "item": "minecraft:bundle",
+	  "title": "Bundle",
+	  "link_recipe ": true,
+	  "text": "The rabbit hide bundle is obtained by combining some rabbit hide and strings in a crafting table as show on the right.$(br2)This bundle has 64 slots or 1 stack of storage."
+	},
+	{
+	  "type": "patchouli:crafting",
+	  "title": "Hello world !",
+	  "recipe ": "expandedironbundles:bundle",
+	  "text": "The bundle can also be ??? further into a Copper Bundle."
+	},
+	{
+	  "type": "patchouli:crafting",
+	  "title": "Hello world !",
+	  "recipe ": "data/expandedironbundles/recipes/bundle",
+	  "text": "The bundle can also be ??? further into a Copper Bundle."
+	},
+	{
+	  "type": "patchouli:crafting",
+	  "title": "Hello world !",
+	  "recipe ": "expandedironbundles:recipes/bundle",
+	  "text": "The bundle can also be ??? further into a Copper Bundle."
+	},
+	{
+	  "type": "patchouli:crafting",
+	  "title": "Hello world !",
+	  "recipe ": "data/expandedironbundles/recipes/bundle.json",
+	  "text": "The bundle can also be ??? further into a Copper Bundle."
+	},
+	{
+	  "type": "patchouli:crafting",
+	  "title": "Hello world !",
+	  "recipe ": "expandedironbundles:recipes/bundle.json",
+	  "text": "The bundle can also be ??? further into a Copper Bundle."
+	}
+  ]
+}

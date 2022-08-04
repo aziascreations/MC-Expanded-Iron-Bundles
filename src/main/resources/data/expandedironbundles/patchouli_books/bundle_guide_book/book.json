@@ -1,0 +1,8 @@
+{
+  "name": "Expanded Iron Bundles Guide Book",
+  "landing_text": "LANDING TEXT",
+  "book_texture": "patchouli:textures/gui/book_gray.png",
+  "model ": "expandedironbundles:guide_book",
+  "show_progress": false,
+  "version": 1
+}

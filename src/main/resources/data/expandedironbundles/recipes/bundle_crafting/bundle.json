@@ -7,10 +7,10 @@
   ],
   "key": {
 	"#": {
-	  "item": "minecraft:string"
+	  "tag": "expandedironbundles:materials_bundle_string"
 	},
 	"R": {
-	  "item": "minecraft:rabbit_hide"
+	  "tag": "expandedironbundles:materials_bundle_leather"
 	}
   },
   "result": {

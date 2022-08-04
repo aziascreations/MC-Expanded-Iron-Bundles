@@ -1,0 +1,24 @@
+{
+  "type": "nbtcrafting:smithing",
+  "base": {
+	"item": "expandedironbundles:obsidian_ingot_bundle"
+  },
+  "ingredient": {
+	"item": "minecraft:piston"
+  },
+  "result": {
+	"item": "expandedironbundles:obsidian_ingot_bundle",
+	"data": {
+	  "$": {
+		"value": "base",
+		"paths": {
+		  "/Upgrades\\[\\d+\\]/": "append"
+		}
+	  },
+	  "Upgrades": [
+		"powered_launcher"
+	  ],
+	  "JoeMama": "$ base.Upgrades#i"
+	}
+  }
+}

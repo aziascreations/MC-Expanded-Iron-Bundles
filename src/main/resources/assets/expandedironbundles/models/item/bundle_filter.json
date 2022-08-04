@@ -1,0 +1,14 @@
+{
+  "parent": "item/generated",
+  "textures": {
+	"layer0": "expandedironbundles:item/bundle_filter_unset"
+  },
+  "overrides": [
+	{
+	  "predicate": {
+		"filled": 0.0000001
+	  },
+	  "model": "expandedironbundles:item/bundle_filter_set"
+	}
+  ]
+}

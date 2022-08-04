@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+	{
+	  "item": "expandedironbundles:bundle_filter"
+	}
+  ],
+  "result": {
+	"item": "expandedironbundles:bundle_filter",
+	"count": 1
+  }
+}

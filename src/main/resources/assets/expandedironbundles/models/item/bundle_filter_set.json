@@ -1,0 +1,6 @@
+{
+  "parent": "expandedironbundles:item/bundle_filter",
+  "textures": {
+	"layer0": "expandedironbundles:item/bundle_filter_set"
+  }
+}
