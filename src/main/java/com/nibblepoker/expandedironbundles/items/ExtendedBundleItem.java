@@ -42,14 +42,19 @@ public class ExtendedBundleItem extends BundleItem {
 	private static final String NBT_ITEMS_KEY = StorageNbtHelpers.NBT_ITEMS_KEY;
 	
 	/**
-	 * Color used in the GUI to represent the bundle's current occupancy usage.
+	 * Color used in the GUI to represent the bundle's current occupancy usage when it isn't overflowing.
 	 */
-	private static final int ITEM_BAR_COLOR = MathHelper.packRgb(0.4F, 0.4F, 1.0F);
+	private static final int ITEM_BAR_COLOR_REGULAR = MathHelper.packRgb(0.4F, 0.4F, 1.0F);
+	
+	/**
+	 * Color used in the GUI to represent the bundle's current occupancy usage when it is overflowing.
+	 */
+	private static final int ITEM_BAR_COLOR_OVERFLOWING = MathHelper.packRgb(1.0F, 0.2F, 0.2F);
 	
 	/**
 	 * Maximum amount of items a bundle can hold at any given time.
 	 */
-	public final int maxOccupancy;
+	public final int maxBaseOccupancy;
 	
 	/**
 	 * Maximum amount of upgrades that can be applied to a bundle at any given time.
@@ -58,8 +63,17 @@ public class ExtendedBundleItem extends BundleItem {
 	
 	public ExtendedBundleItem(Settings settings, int maxOccupancy, int maxUpgrades) {
 		super(settings.maxCount(1));
-		this.maxOccupancy = maxOccupancy;
+		this.maxBaseOccupancy = maxOccupancy;
 		this.maxUpgrades = maxUpgrades;
+	}
+	
+	/**
+	 * Calculates the max occupancy while taking into account upgrades and filters.
+	 * @param stack ???
+	 * @return The bundle's final max occupancy.
+	 */
+	public int getMaxOccupancy(ItemStack stack) {
+		return this.maxBaseOccupancy * (BundleFilterNbtHelpers.doesItemHaveFilter(stack) ? 2 : 1);
 	}
 	
 	/**
@@ -85,20 +99,23 @@ public class ExtendedBundleItem extends BundleItem {
 			// The targeted slot was empty, we will try to remove an item from the bundle.
 			this.playRemoveOneSound(player);
 			
-			// We grab and remove the first stack in the bundle, do ???, and ???.
+			// We grab and remove the first stack in the bundle, put it in a slot while adding the remainder back.
+			// We are also using "Integer.MAX_VALUE" instead of "this.getMaxOccupancy(stack)" to prevent item deletion
+			//  when removing from the bundle into the inventory while the bundle is overflowing before AND after
+			//  removing a stack.
 			StorageNbtHelpers.removeFirstStack(stack, NBT_ITEMS_KEY).ifPresent((removedStack) -> StorageNbtHelpers.addStackToStorage(
-					stack, slot.insertStack(removedStack), this.maxOccupancy, NBT_ITEMS_KEY
+					stack, slot.insertStack(removedStack), Integer.MAX_VALUE, NBT_ITEMS_KEY
 			));
 		} else if (targetItemStack.getItem().canBeNested()) {
 			// We attempt to add an item to the bundle.
 			int insertableItemCount = (
-					this.maxOccupancy - StorageNbtHelpers.getStorageItemOccupancy(stack, NBT_ITEMS_KEY)
+					this.getMaxOccupancy(stack) - StorageNbtHelpers.getStorageItemOccupancy(stack, NBT_ITEMS_KEY)
 			) / StorageNbtHelpers.getItemOccupancy(targetItemStack);
 			
 			int itemAddedCount = StorageNbtHelpers.addStackToStorage(
 					stack,
 					slot.takeStackRange(targetItemStack.getCount(), insertableItemCount, player),
-					this.maxOccupancy,
+					this.getMaxOccupancy(stack),
 					NBT_ITEMS_KEY
 			);
 			
@@ -133,7 +150,7 @@ public class ExtendedBundleItem extends BundleItem {
 			} else {
 				// We attempt to add an item to the bundle.
 				int itemAddedCount = StorageNbtHelpers.addStackToStorage(
-						stack, otherStack, this.maxOccupancy, NBT_ITEMS_KEY
+						stack, otherStack, this.getMaxOccupancy(stack), NBT_ITEMS_KEY
 				);
 				
 				if (itemAddedCount > 0) {
@@ -184,14 +201,23 @@ public class ExtendedBundleItem extends BundleItem {
 		return StorageNbtHelpers.getStorageItemOccupancy(stack, NBT_ITEMS_KEY) > 0;
 	}
 	
+	/**
+	 * Checks of the given bundle is overflowing.
+	 * @param stack ???
+	 * @return <i>true</i> if the bundle is overflowing, <i>false</i> otherwise.
+	 */
+	public boolean isOverflowing(ItemStack stack) {
+		return StorageNbtHelpers.getStorageItemOccupancy(stack, NBT_ITEMS_KEY) > this.getMaxOccupancy(stack);
+	}
+	
 	@Override
 	public int getItemBarStep(ItemStack stack) {
-		return Math.min(1 + 12 * StorageNbtHelpers.getStorageItemOccupancy(stack, NBT_ITEMS_KEY) / this.maxOccupancy, 13);
+		return Math.min(1 + 12 * StorageNbtHelpers.getStorageItemOccupancy(stack, NBT_ITEMS_KEY) / this.getMaxOccupancy(stack), 13);
 	}
 	
 	@Override
 	public int getItemBarColor(ItemStack stack) {
-		return ITEM_BAR_COLOR;
+		return this.isOverflowing(stack) ? ITEM_BAR_COLOR_OVERFLOWING : ITEM_BAR_COLOR_REGULAR;
 	}
 	
 	/**
@@ -225,7 +251,7 @@ public class ExtendedBundleItem extends BundleItem {
 		tooltip.add(Text.translatable(
 				"item.expandedironbundles.bundle.fullness.occupancy",
 				StorageNbtHelpers.getStorageItemOccupancy(stack, NBT_ITEMS_KEY),
-				this.maxOccupancy
+				this.getMaxOccupancy(stack)
 		).formatted(Formatting.GRAY));
 		
 		if (BundleFilterNbtHelpers.doesItemHaveFilter(stack)) {
