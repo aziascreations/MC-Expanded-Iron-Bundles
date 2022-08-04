@@ -1,5 +1,6 @@
 package com.nibblepoker.expandedironbundles.helpers.nbt;
 
+import com.nibblepoker.expandedironbundles.ExpandedIronBundlesMod;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
@@ -62,6 +63,43 @@ public class BundleFilterNbtHelpers {
 		
 		// Fallback in case the function is called when it shouldn't.
 		return "???";
+	}
+	
+	/**
+	 * ???
+	 * @param stack ???
+	 * @return ???
+	 */
+	public static String getFilteredItemIdentifier(ItemStack stack) {
+		NbtCompound stackNbtCompound = stack.getNbt();
+		
+		if (stack.hasNbt() && stackNbtCompound != null) {
+			try {
+				return new Identifier(stackNbtCompound.getString(NBT_FILTER_KEY)).toString();
+			} catch(InvalidIdentifierException ignored) {}
+		}
+		
+		// Fallback in case the function is called when it shouldn't.
+		return "???";
+	}
+	
+	/**
+	 * Checks if a given <i>ItemStack</i> passes the filter applied to another <i>ItemStack</i>.
+	 * @param filteringStack ???
+	 * @param filteredStack ???
+	 * @return <i>true</i> if the filter matches the filtered item, <i>false</i> otherwise.
+	 */
+	public static boolean doesItemPassFilter(ItemStack filteringStack, ItemStack filteredStack) {
+		if (!doesItemHaveFilter(filteringStack)) {
+			return true;
+		}
+		
+		String a = getFilteredItemIdentifier(filteringStack);
+		String b = Registry.ITEM.getId(filteredStack.getItem()).toString();
+		
+		ExpandedIronBundlesMod.LOGGER.info(a+" vs "+b);
+		
+		return a.equals(b);
 	}
 	
 	/**

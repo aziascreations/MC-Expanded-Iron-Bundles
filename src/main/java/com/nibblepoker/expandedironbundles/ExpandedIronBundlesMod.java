@@ -33,24 +33,24 @@ public class ExpandedIronBundlesMod implements ModInitializer {
 			new FabricItemSettings().group(ExpandedIronBundlesMod.BUNDLE_ITEM_GROUP), 128, 1
 	);
 	public static final Item IRON_INGOT_BUNDLE = new ExtendedBundleItem(
-			new FabricItemSettings().group(ExpandedIronBundlesMod.BUNDLE_ITEM_GROUP), 256, 1
+			new FabricItemSettings().group(ExpandedIronBundlesMod.BUNDLE_ITEM_GROUP), 192, 1
 	);
 	public static final Item GOLD_INGOT_BUNDLE = new ExtendedBundleItem(
-			new FabricItemSettings().group(ExpandedIronBundlesMod.BUNDLE_ITEM_GROUP), 384, 1
+			new FabricItemSettings().group(ExpandedIronBundlesMod.BUNDLE_ITEM_GROUP), 256, 1
 	);
 	public static final Item DIAMOND_INGOT_BUNDLE = new ExtendedBundleItem(
-			new FabricItemSettings().group(ExpandedIronBundlesMod.BUNDLE_ITEM_GROUP), 512,2
+			new FabricItemSettings().group(ExpandedIronBundlesMod.BUNDLE_ITEM_GROUP), 320,2
 	);
 	public static final Item OBSIDIAN_INGOT_BUNDLE  = new ExtendedBundleItem(
-			new FabricItemSettings().group(ExpandedIronBundlesMod.BUNDLE_ITEM_GROUP), 768, 2
+			new FabricItemSettings().group(ExpandedIronBundlesMod.BUNDLE_ITEM_GROUP), 384, 2
 	);
 	public static final Item NETHERITE_CHUNK_BUNDLE = new ExtendedBundleItem(
 			new FabricItemSettings().group(ExpandedIronBundlesMod.BUNDLE_ITEM_GROUP)
-					.rarity(Rarity.UNCOMMON), 896, 2
+					.rarity(Rarity.UNCOMMON), 448, 2
 	);
 	public static final Item NETHERITE_INGOT_BUNDLE = new ExtendedBundleItem(
 			new FabricItemSettings().group(ExpandedIronBundlesMod.BUNDLE_ITEM_GROUP)
-					.fireproof().rarity(Rarity.UNCOMMON), 1024, 3
+					.fireproof().rarity(Rarity.UNCOMMON), 512, 3
 	);
 	public static final Item BUNDLE_FILTER = new BundleFilterItem(
 			new FabricItemSettings().group(ExpandedIronBundlesMod.BUNDLE_ITEM_GROUP)

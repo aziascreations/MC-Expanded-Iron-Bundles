@@ -8,17 +8,17 @@ public class ModConfig extends Config {
 		super(logger, namespace);
 		
 		// Adding default config fields and values
-		this.registerStringField("joe", "mama");
+		this.registerStringField("__WARNING__", "This config file is not currently used by the mod !");
 		
 		// Storage size for each bundle
 		this.registerIntegerField("bundleSizeVanilla", 64);
 		this.registerIntegerField("bundleSizeCopperIngot", 128);
-		this.registerIntegerField("bundleSizeIronIngot", 256);
-		this.registerIntegerField("bundleSizeGoldIngot", 384);
-		this.registerIntegerField("bundleSizeDiamondIngot", 512);
-		this.registerIntegerField("bundleSizeObsidianIngot", 768);
-		this.registerIntegerField("bundleSizeNetheriteChunk", 896);
-		this.registerIntegerField("bundleSizeNetheriteIngot", 1024);
+		this.registerIntegerField("bundleSizeIronIngot", 192);
+		this.registerIntegerField("bundleSizeGoldIngot", 256);
+		this.registerIntegerField("bundleSizeDiamondIngot", 320);
+		this.registerIntegerField("bundleSizeObsidianIngot", 384);
+		this.registerIntegerField("bundleSizeNetheriteChunk", 448);
+		this.registerIntegerField("bundleSizeNetheriteIngot", 512);
 		
 		// Max upgrade count for each bundle
 		this.registerIntegerField("bundleUpgradeCountVanilla", 0);

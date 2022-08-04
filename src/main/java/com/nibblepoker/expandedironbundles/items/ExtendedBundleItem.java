@@ -108,19 +108,21 @@ public class ExtendedBundleItem extends BundleItem {
 			));
 		} else if (targetItemStack.getItem().canBeNested()) {
 			// We attempt to add an item to the bundle.
-			int insertableItemCount = (
-					this.getMaxOccupancy(stack) - StorageNbtHelpers.getStorageItemOccupancy(stack, NBT_ITEMS_KEY)
-			) / StorageNbtHelpers.getItemOccupancy(targetItemStack);
-			
-			int itemAddedCount = StorageNbtHelpers.addStackToStorage(
-					stack,
-					slot.takeStackRange(targetItemStack.getCount(), insertableItemCount, player),
-					this.getMaxOccupancy(stack),
-					NBT_ITEMS_KEY
-			);
-			
-			if (itemAddedCount > 0) {
-				this.playInsertSound(player);
+			if(BundleFilterNbtHelpers.doesItemPassFilter(stack, targetItemStack)) {
+				int insertableItemCount = (
+						this.getMaxOccupancy(stack) - StorageNbtHelpers.getStorageItemOccupancy(stack, NBT_ITEMS_KEY)
+				) / StorageNbtHelpers.getItemOccupancy(targetItemStack);
+				
+				int itemAddedCount = StorageNbtHelpers.addStackToStorage(
+						stack,
+						slot.takeStackRange(targetItemStack.getCount(), insertableItemCount, player),
+						this.getMaxOccupancy(stack),
+						NBT_ITEMS_KEY
+				);
+				
+				if(itemAddedCount > 0) {
+					this.playInsertSound(player);
+				}
 			}
 		}
 		
@@ -129,7 +131,7 @@ public class ExtendedBundleItem extends BundleItem {
 	
 	/**
 	 * Function called when the item is clicked on with the mouse cursor or picked up from any "inventory-like" storage.
-	 * @param stack ???
+	 * @param storageStack ???
 	 * @param otherStack ???
 	 * @param slot ???
 	 * @param clickType ???
@@ -138,24 +140,26 @@ public class ExtendedBundleItem extends BundleItem {
 	 * @return <i>true</i> if the event was handled, <i>false</i> otherwise and if any other handler should be called.
 	 */
 	@Override
-	public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
+	public boolean onClicked(ItemStack storageStack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
 		// Checking if we right-clicked on the bundle with an item that can be split into multiple stacks.
 		if (clickType == ClickType.RIGHT && slot.canTakePartial(player)) {
 			if (otherStack.isEmpty()) {
 				// We remove an item from the bundle.
-				StorageNbtHelpers.removeFirstStack(stack, NBT_ITEMS_KEY).ifPresent((removedStack) -> {
+				StorageNbtHelpers.removeFirstStack(storageStack, NBT_ITEMS_KEY).ifPresent((removedStack) -> {
 					this.playRemoveOneSound(player);
 					cursorStackReference.set(removedStack);
 				});
 			} else {
 				// We attempt to add an item to the bundle.
-				int itemAddedCount = StorageNbtHelpers.addStackToStorage(
-						stack, otherStack, this.getMaxOccupancy(stack), NBT_ITEMS_KEY
-				);
-				
-				if (itemAddedCount > 0) {
-					this.playInsertSound(player);
-					otherStack.decrement(itemAddedCount);
+				if(BundleFilterNbtHelpers.doesItemPassFilter(storageStack, otherStack)) {
+					int itemAddedCount = StorageNbtHelpers.addStackToStorage(
+							storageStack, otherStack, this.getMaxOccupancy(storageStack), NBT_ITEMS_KEY
+					);
+					
+					if (itemAddedCount > 0) {
+						this.playInsertSound(player);
+						otherStack.decrement(itemAddedCount);
+					}
 				}
 			}
 			
