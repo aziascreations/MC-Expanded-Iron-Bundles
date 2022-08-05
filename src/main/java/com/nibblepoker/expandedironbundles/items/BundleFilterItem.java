@@ -1,26 +1,25 @@
 package com.nibblepoker.expandedironbundles.items;
 
 import com.nibblepoker.expandedironbundles.helpers.nbt.BundleFilterNbtHelpers;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.ClickType;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickAction;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 
 public class BundleFilterItem extends Item {
-	public BundleFilterItem(Settings settings) {
-		super(settings.maxCount(1));
+	public BundleFilterItem(Properties settings) {
+		super(settings.stacksTo(1));
 	}
 	
 	/**
@@ -31,16 +30,15 @@ public class BundleFilterItem extends Item {
 	 * @param player ???
 	 * @return <i>true</i> if the event was handled, <i>false</i> otherwise and if any other handler should be called.
 	 */
-	@Override
-	public boolean onStackClicked(ItemStack stack, Slot slot, ClickType clickType, PlayerEntity player) {
-		if (clickType != ClickType.RIGHT) {
+	public boolean overrideStackedOnOther(ItemStack stack, Slot slot, ClickAction clickType, Player player) {
+		if (clickType != ClickAction.SECONDARY) {
 			// The item was put in the inventory with a left click, most likely.
 			// The event won't be handled here, we let other functions handle the event.
 			return false;
 		}
 		
 		// Grabbing the ItemStack in the clicked Slot.
-		ItemStack targetItemStack = slot.getStack();
+		ItemStack targetItemStack = slot.getItem();
 		
 		if (targetItemStack.isEmpty()) {
 			// No item was right-clicked on, no filter will be set.
@@ -62,16 +60,15 @@ public class BundleFilterItem extends Item {
 	 * @param hand Hand in which the activated item resides.
 	 * @return N/A
 	 */
-	@Override
-	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-		ItemStack itemStack = user.getStackInHand(hand);
+	public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+		ItemStack itemStack = user.getItemInHand(hand);
 		
 		if (BundleFilterNbtHelpers.doesItemHaveFilter(itemStack)) {
 			BundleFilterNbtHelpers.removeFilter(itemStack);
 			this.playFilterSetSound(user);
-			return TypedActionResult.success(itemStack, world.isClient());
+			return InteractionResultHolder.sidedSuccess(itemStack, world.isClientSide());
 		} else {
-			return TypedActionResult.fail(itemStack);
+			return InteractionResultHolder.fail(itemStack);
 		}
 	}
 	
@@ -83,21 +80,20 @@ public class BundleFilterItem extends Item {
 	 * @param tooltip ???
 	 * @param context ???
 	 */
-	@Override
-	public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
+	public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context) {
 		if (BundleFilterNbtHelpers.doesItemHaveFilter(stack)) {
-			tooltip.add(Text.translatable(
+			tooltip.add(Component.translatable(
 					"tooltip.expandedironbundles.bundle_filter_set",
 					BundleFilterNbtHelpers.getFilteredItemName(stack)
-			).formatted(Formatting.GRAY));
+			).withStyle(ChatFormatting.GRAY));
 		} else {
-			tooltip.add(Text.translatable(
+			tooltip.add(Component.translatable(
 					"tooltip.expandedironbundles.bundle_filter_unset"
-			).formatted(Formatting.GRAY));
+			).withStyle(ChatFormatting.GRAY));
 		}
 	}
 	
 	private void playFilterSetSound(Entity entity) {
-		entity.playSound(SoundEvents.ENTITY_VILLAGER_WORK_SHEPHERD, 0.8F, 0.8F + entity.getWorld().getRandom().nextFloat() * 0.4F);
+		entity.playSound(SoundEvents.VILLAGER_WORK_SHEPHERD, 0.8F, 0.8F + entity.getLevel().getRandom().nextFloat() * 0.4F);
 	}
 }

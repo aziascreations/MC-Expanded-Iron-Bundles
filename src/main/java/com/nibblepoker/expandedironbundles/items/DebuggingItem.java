@@ -24,7 +24,6 @@ public class DebuggingItem extends Item {
 	 * @param player ???
 	 * @return <i>true</i> if the event was handled, <i>false</i> otherwise and if any other handler should be called.
 	 */
-	//@Override
 	public boolean overrideStackedOnOther(ItemStack stack, Slot slot, ClickAction clickType, Player player) {
 		ExpandedIronBundlesMod.LOGGER.info("DebugJoystickItem.onStackClicked(...)");
 		ExpandedIronBundlesMod.LOGGER.info("> stack: "+stack.toString());
@@ -45,7 +44,6 @@ public class DebuggingItem extends Item {
 	 * @param cursorStackReference ???
 	 * @return <i>true</i> if the event was handled, <i>false</i> otherwise and if any other handler should be called.
 	 */
-	//@Override
 	public boolean overrideOtherStackedOnMe(ItemStack stack, ItemStack otherStack, Slot slot, ClickAction clickType, Player player, SlotAccess cursorStackReference) {
 		ExpandedIronBundlesMod.LOGGER.info("DebugJoystickItem.onClicked(...)");
 		ExpandedIronBundlesMod.LOGGER.info("> stack: "+stack.toString());
@@ -67,7 +65,6 @@ public class DebuggingItem extends Item {
 	 * @param hand Hand in which the activated item resides.
 	 * @return N/A
 	 */
-	//@Override
 	public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
 		ExpandedIronBundlesMod.LOGGER.info("DebugJoystickItem.use(...)");
 		ExpandedIronBundlesMod.LOGGER.info("> world: "+world.toString());
