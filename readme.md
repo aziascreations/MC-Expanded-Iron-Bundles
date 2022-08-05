@@ -45,11 +45,11 @@ Filters can be defined by right-clicking on an item or block while holding any s
 Once set, they can also be cleared by putting them in a crafting table.
 
 To apply them to a bundle, you simply need to put a filter with any bundle in a crafting grid.<br>
-Any existing item in the bundle that doesn't match the filter can ony be removed and will still take space.<br>
+Any existing item in the bundle that doesn't match the filter can only be removed and will still take space.<br>
 A blank filter will remove any filter from a bundle, and any item that occupy space over the limit will only be removable.
 
 #### Upgrades
-Upgrade are permanent modifications that can be applied in a limited number to a bundle in order to change its behaviour.<br>
+Upgrades are permanent modifications that can be applied in a limited number to a bundle in order to change its behaviour.<br>
 These upgrades are added through the <i>Smithing Table</i>.
 
 #### Overflowing Bundles
@@ -62,7 +62,7 @@ This type of bundle can be "created" when you reduce the maximum size of a bundl
 * [1.19 / 1.19.1](https://github.com/aziascreations/MC-Expanded-Iron-Bundles/tree/fabric-1.19) - *'fabric-1.19'* branch
 
 ### Forge source code
-* Should be coming soon...
+* [1.19.1](https://github.com/aziascreations/MC-Expanded-Iron-Bundles/tree/forge-1.19) - *'forge-1.19'* branch
 
 ### Recipes
 <img src="images/crafts/full_all.png"/>
