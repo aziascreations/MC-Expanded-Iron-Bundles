@@ -1,18 +1,18 @@
 package com.nibblepoker.expandedironbundles.items;
 
 import com.nibblepoker.expandedironbundles.ExpandedIronBundlesMod;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.StackReference;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.util.ClickType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.SlotAccess;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickAction;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public class DebuggingItem extends Item {
-	public DebuggingItem(Settings settings) {
+	public DebuggingItem(Properties settings) {
 		super(settings);
 	}
 	
@@ -24,8 +24,8 @@ public class DebuggingItem extends Item {
 	 * @param player ???
 	 * @return <i>true</i> if the event was handled, <i>false</i> otherwise and if any other handler should be called.
 	 */
-	@Override
-	public boolean onStackClicked(ItemStack stack, Slot slot, ClickType clickType, PlayerEntity player) {
+	//@Override
+	public boolean overrideStackedOnOther(ItemStack stack, Slot slot, ClickAction clickType, Player player) {
 		ExpandedIronBundlesMod.LOGGER.info("DebugJoystickItem.onStackClicked(...)");
 		ExpandedIronBundlesMod.LOGGER.info("> stack: "+stack.toString());
 		ExpandedIronBundlesMod.LOGGER.info("> slot: "+slot.toString());
@@ -45,8 +45,8 @@ public class DebuggingItem extends Item {
 	 * @param cursorStackReference ???
 	 * @return <i>true</i> if the event was handled, <i>false</i> otherwise and if any other handler should be called.
 	 */
-	@Override
-	public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
+	//@Override
+	public boolean overrideOtherStackedOnMe(ItemStack stack, ItemStack otherStack, Slot slot, ClickAction clickType, Player player, SlotAccess cursorStackReference) {
 		ExpandedIronBundlesMod.LOGGER.info("DebugJoystickItem.onClicked(...)");
 		ExpandedIronBundlesMod.LOGGER.info("> stack: "+stack.toString());
 		ExpandedIronBundlesMod.LOGGER.info("> slot: "+slot.toString());
@@ -67,15 +67,15 @@ public class DebuggingItem extends Item {
 	 * @param hand Hand in which the activated item resides.
 	 * @return N/A
 	 */
-	@Override
-	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+	//@Override
+	public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
 		ExpandedIronBundlesMod.LOGGER.info("DebugJoystickItem.use(...)");
 		ExpandedIronBundlesMod.LOGGER.info("> world: "+world.toString());
 		ExpandedIronBundlesMod.LOGGER.info("> user: "+user.toString());
 		ExpandedIronBundlesMod.LOGGER.info("> hand: "+hand.toString());
 		ExpandedIronBundlesMod.LOGGER.info("");
 		
-		ItemStack itemStack = user.getStackInHand(hand);
-		return TypedActionResult.fail(itemStack);
+		ItemStack itemStack = user.getItemInHand(hand);
+		return InteractionResultHolder.fail(itemStack);
 	}
 }

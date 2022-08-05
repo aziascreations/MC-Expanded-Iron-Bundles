@@ -1,0 +1,22 @@
+{
+  "item.expandedironbundles.copper_chunk_bundle": "Sac en cuivre brut",
+  "item.expandedironbundles.copper_ingot_bundle": "Sac en cuivre",
+  "item.expandedironbundles.iron_chunk_bundle": "Sac en fer brut",
+  "item.expandedironbundles.iron_ingot_bundle": "Sac en fer",
+  "item.expandedironbundles.gold_chunk_bundle": "Sac en or brut",
+  "item.expandedironbundles.gold_ingot_bundle": "Sac en or",
+  "item.expandedironbundles.diamond_chunk_bundle": "Sac en diamant brut",
+  "item.expandedironbundles.diamond_ingot_bundle": "Sac en diamant",
+  "item.expandedironbundles.obsidian_chunk_bundle": "Sac en obsidienne brut",
+  "item.expandedironbundles.obsidian_ingot_bundle": "Sac en obsidienne",
+  "item.expandedironbundles.netherite_chunk_bundle": "Sac en fragments de Netherite",
+  "item.expandedironbundles.netherite_ingot_bundle": "Sac en Netherite",
+  "item.expandedironbundles.bundle_filter": "Filtre pour sac",
+  "item.expandedironbundles.debug_joystick": "Joystick de débogage",
+  "itemGroup.expandedironbundles.main": "Sacs",
+  "tooltip.expandedironbundles.bundle_filter_unset": "Filtre: §oAucun§r",
+  "tooltip.expandedironbundles.bundle_filter_set": "Filtre: §o%s§r",
+  "item.expandedironbundles.bundle.fullness.occupancy": "Utilisation: §o%s/%s§r",
+  "item.expandedironbundles.bundle.fullness.unfiltered": "Filtre: §oAucun§r",
+  "item.expandedironbundles.bundle.fullness.filtered": "Filtre: §o%s§r"
+}

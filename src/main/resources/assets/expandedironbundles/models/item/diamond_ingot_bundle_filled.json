@@ -1,0 +1,6 @@
+{
+  "parent": "expandedironbundles:item/diamond_ingot_bundle",
+  "textures": {
+	"layer0": "expandedironbundles:item/diamond_ingot_bundle_filled"
+  }
+}

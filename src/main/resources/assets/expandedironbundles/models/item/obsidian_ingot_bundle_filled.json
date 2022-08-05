@@ -1,0 +1,6 @@
+{
+  "parent": "expandedironbundles:item/obsidian_ingot_bundle",
+  "textures": {
+	"layer0": "expandedironbundles:item/obsidian_ingot_bundle_filled"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "parent": "item/generated",
+  "textures": {
+	"layer0": "expandedironbundles:item/diamond_ingot_bundle"
+  },
+  "overrides": [
+	{
+	  "predicate": {
+		"filled": 0.0000001
+	  },
+	  "model": "expandedironbundles:item/diamond_ingot_bundle_filled"
+	}
+  ]
+}
