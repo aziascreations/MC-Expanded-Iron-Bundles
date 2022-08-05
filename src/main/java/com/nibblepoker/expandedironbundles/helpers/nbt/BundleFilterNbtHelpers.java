@@ -1,10 +1,10 @@
 package com.nibblepoker.expandedironbundles.helpers.nbt;
 
 import com.nibblepoker.expandedironbundles.ExpandedIronBundlesMod;
+import net.minecraft.ResourceLocationException;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.InvalidIdentifierException;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 public class BundleFilterNbtHelpers {
@@ -43,7 +43,7 @@ public class BundleFilterNbtHelpers {
 	 */
 	public static void setFilter(ItemStack filterContainerStack, ItemStack filteredStack) {
 		CompoundTag nbtCompound = filterContainerStack.getOrCreateTag();
-		Identifier itemIdentifier = Registry.ITEM.getId(filteredStack.getItem());
+		ResourceLocation itemIdentifier = Registry.ITEM.getKey(filteredStack.getItem());
 		nbtCompound.putString(NBT_FILTER_KEY, itemIdentifier == null ? "minecraft:air" : itemIdentifier.toString());
 	}
 	
@@ -56,9 +56,10 @@ public class BundleFilterNbtHelpers {
 		CompoundTag stackNbtCompound = stack.getTag();
 		
 		if (stack.hasTag() && stackNbtCompound != null) {
-			try {
+			/*try {
 				return Registry.ITEM.get(new Identifier(stackNbtCompound.getString(NBT_FILTER_KEY))).getName().getString();
-			} catch(InvalidIdentifierException ignored) {}
+			} catch(InvalidIdentifierException ignored) {}/**/
+			return "Goo goo ga ga";
 		}
 		
 		// Fallback in case the function is called when it shouldn't.
@@ -75,8 +76,9 @@ public class BundleFilterNbtHelpers {
 		
 		if (stack.hasTag() && stackNbtCompound != null) {
 			try {
-				return new Identifier(stackNbtCompound.getString(NBT_FILTER_KEY)).toString();
-			} catch(InvalidIdentifierException ignored) {}
+				return new ResourceLocation(stackNbtCompound.getString(NBT_FILTER_KEY)).toString();
+			} catch(ResourceLocationException ignored) {}
+			// FIXME: Check if this is the right exception
 		}
 		
 		// Fallback in case the function is called when it shouldn't.
@@ -95,7 +97,7 @@ public class BundleFilterNbtHelpers {
 		}
 		
 		String a = getFilteredItemIdentifier(filteringStack);
-		String b = Registry.ITEM.getId(filteredStack.getItem()).toString();
+		String b = Registry.ITEM.getKey(filteredStack.getItem()).toString();
 		
 		ExpandedIronBundlesMod.LOGGER.info(a+" vs "+b);
 		

@@ -1,9 +1,12 @@
 package com.nibblepoker.expandedironbundles.helpers;
 
 import com.nibblepoker.expandedironbundles.ExpandedIronBundlesMod;
+import net.minecraft.core.Registry;
+import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -17,7 +20,7 @@ public class NbtHelpers {
 	 * @return The updated NBT compound
 	 */
 	public static CompoundTag writeLargeItemStackNbt(ItemStack itemStack, CompoundTag nbt) {
-		Identifier itemIdentifier = Registry.ITEM.getId(itemStack.getItem());
+		ResourceLocation itemIdentifier = Registry.ITEM.getKey(itemStack.getItem());
 		nbt.putString("id", itemIdentifier == null ? "minecraft:air" : itemIdentifier.toString());
 		nbt.putInt("Count", itemStack.getCount());
 		if (itemStack.getTag() != null) {
@@ -26,24 +29,32 @@ public class NbtHelpers {
 		return nbt;
 	}
 	
+	// Converted from "ItemStack.of" and the related "ItemStack(CompoundTag p_41608_)" constructor.
 	public static ItemStack readLargeItemStackFromNbt(CompoundTag nbt) {
 		ItemStack returnedItemStack = EMPTY;
 		
 		try {
 			// Grabbing an item instance from the registry by using the id in the NBT.
-			Item readItem = Registry.ITEM.get(new Identifier(nbt.getString("id")));
+			
+			//FIXME: !!!
+			//this.capNBT = nbt.contains("ForgeCaps") ? nbt.getCompound("ForgeCaps") : null;
+			
+			Item readItem = Registry.ITEM.get(new ResourceLocation(nbt.getString("id")));
+			
+			//FIXME: !!!
+			//this.delegate = net.minecraftforge.registries.ForgeRegistries.ITEMS.getDelegateOrThrow(readItem);
 			
 			// Will return the actual amount, or 0 if not found with that data type.
 			// The value of '1' is used as a fallback and to shut Intellij up.
 			int itemCount = 1;
 			
 			try {
-				NbtElement countNbtElement = nbt.get("Count");
+				Tag countNbtElement = nbt.get("Count");
 				if (countNbtElement != null) {
-					if (countNbtElement.getClass().equals(NbtInt.class)) {
+					if (countNbtElement.getClass().equals(IntTag.class)) {
 						// No transformation should be done !
 						itemCount = nbt.getInt("Count");
-					} else if (countNbtElement.getClass().equals(NbtByte.class)) {
+					} else if (countNbtElement.getClass().equals(ByteTag.class)) {
 						// Attempting to read vanilla/legacy byte variables
 						byte itemCountByte = nbt.getByte("Count");
 						
@@ -68,12 +79,15 @@ public class NbtHelpers {
 			ItemStack itemStack = new ItemStack(readItem, itemCount);
 			
 			if (nbt.contains("tag", 10)) {
-				itemStack.setNbt(nbt.getCompound("tag"));
-				itemStack.getItem().postProcessNbt(itemStack.getNbt());
+				itemStack.setTag(nbt.getCompound("tag"));
+				assert itemStack.getTag() != null;
+				itemStack.getItem().verifyTagAfterLoad(itemStack.getTag());
 			}
+			// FIXME: !!!
+			// this.forgeInit();
 			
-			if (itemStack.getItem().isDamageable()) {
-				itemStack.setDamage(itemStack.getDamage());
+			if (itemStack.getItem().isDamageable(itemStack)) {
+				itemStack.setDamageValue(itemStack.getDamageValue());
 			}
 			
 			returnedItemStack = itemStack;

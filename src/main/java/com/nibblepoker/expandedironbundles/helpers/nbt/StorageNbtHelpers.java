@@ -1,13 +1,13 @@
 package com.nibblepoker.expandedironbundles.helpers.nbt;
 
 import com.nibblepoker.expandedironbundles.helpers.NbtHelpers;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BundleItem;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -103,14 +103,15 @@ public class StorageNbtHelpers {
 		}
 		
 		ListTag nbtList = nbtCompound.getList(nbtStorageKey, 10);
-		Stream<NbtElement> nbtStream = nbtList.stream();
-		Objects.requireNonNull(NbtCompound.class);
+		Stream<Tag> nbtStream = nbtList.stream();
+		Objects.requireNonNull(CompoundTag.class);
 		
 		// TODO: Handle 'splitStacksAtMaxSize' !
 		
-		return nbtStream.map(NbtCompound.class::cast).map(NbtHelpers::readLargeItemStackFromNbt);
+		return nbtStream.map(CompoundTag.class::cast).map(NbtHelpers::readLargeItemStackFromNbt);
 	}
 	
+	// Called "getWeight" in BundleItem
 	public static int getItemOccupancy(ItemStack stack) {
 		// Checking if the given item is a bundle.
 		// TODO: Improve this and make an interface/tags ?
@@ -120,8 +121,8 @@ public class StorageNbtHelpers {
 		}
 		
 		// Checking if it is a beehive or a bee nest.
-		if ((stack.isOf(Items.BEEHIVE) || stack.isOf(Items.BEE_NEST)) && stack.hasNbt()) {
-			NbtCompound nbtCompound = BlockItem.getBlockEntityNbt(stack);
+		if ((stack.is(Items.BEEHIVE) || stack.is(Items.BEE_NEST)) && stack.hasTag()) {
+			CompoundTag nbtCompound = BlockItem.getBlockEntityData(stack);
 			if (nbtCompound != null && !nbtCompound.getList("Bees", 10).isEmpty()) {
 				return DEFAULT_STACK_SIZE;
 			}
@@ -130,20 +131,20 @@ public class StorageNbtHelpers {
 		// TODO: Check if a fix/condition is needed for modded items !
 		// A merging comparison is done elsewhere, nothing should be lost here !
 		
-		return DEFAULT_STACK_SIZE / stack.getMaxCount();
+		return DEFAULT_STACK_SIZE / stack.getMaxStackSize();
 	}
 	
 	public static Optional<CompoundTag> canMergeStack(ItemStack stack, ListTag itemsList) {
 		// FIXME: Check how a stack splitter can be handled here !
-		if (stack.isOf(Items.BUNDLE)) {
+		if (stack.is(Items.BUNDLE)) {
 			return Optional.empty();
 		} else {
-			Stream<NbtElement> nbtStream = itemsList.stream();
-			Objects.requireNonNull(NbtCompound.class);
-			nbtStream = nbtStream.filter(NbtCompound.class::isInstance);
-			Objects.requireNonNull(NbtCompound.class);
-			return nbtStream.map(NbtCompound.class::cast).filter((itemNbt) -> {
-				return ItemStack.canCombine(NbtHelpers.readLargeItemStackFromNbt(itemNbt), stack);
+			Stream<Tag> nbtStream = itemsList.stream();
+			Objects.requireNonNull(CompoundTag.class);
+			nbtStream = nbtStream.filter(CompoundTag.class::isInstance);
+			Objects.requireNonNull(CompoundTag.class);
+			return nbtStream.map(CompoundTag.class::cast).filter((itemNbt) -> {
+				return ItemStack.isSameItemSameTags(NbtHelpers.readLargeItemStackFromNbt(itemNbt), stack);
 			}).findFirst();
 		}
 	}
@@ -163,13 +164,15 @@ public class StorageNbtHelpers {
 	 * @param nbtStorageKey ???
 	 * @return The amount of items that were actually inserted into the bundle.
 	 */
+	
+	// Called "add" in BundleItem
 	public static int addStackToStorage(ItemStack storageStack, ItemStack addedStack, int maxOccupancy, String nbtStorageKey) {
 		// Checking if there is some space left and if the item itself can be inserted in a bundle
-		if (!addedStack.isEmpty() && addedStack.getItem().canBeNested()) {
+		if (!addedStack.isEmpty() && addedStack.getItem().canFitInsideContainerItems()) {
 			// Preparing the NBT compound that will keep all the item data.
 			CompoundTag nbtCompound = storageStack.getOrCreateTag();
 			if (!nbtCompound.contains(nbtStorageKey)) {
-				nbtCompound.put(nbtStorageKey, new NbtList());
+				nbtCompound.put(nbtStorageKey, new ListTag());
 			}
 			
 			int insertableItemCount = Math.min(
@@ -183,16 +186,16 @@ public class StorageNbtHelpers {
 				
 				// Grabbing the item stack's NBT compound into which the given item stack can be merged.
 				// Will be empty if no other stack was found and a new one needs to be created for it.
-				Optional<NbtCompound> optional = canMergeStack(addedStack, nbtList);
+				Optional<CompoundTag> optional = canMergeStack(addedStack, nbtList);
 				
 				if (optional.isPresent()) {
 					// Grabbing the actual ItemStack from the NbtCompound, and removing it from the existing NBT list.
-					NbtCompound mergedItemStackNbtCompound = optional.get();
+					CompoundTag mergedItemStackNbtCompound = optional.get();
 					ItemStack itemStack = NbtHelpers.readLargeItemStackFromNbt(mergedItemStackNbtCompound);
 					nbtList.remove(mergedItemStackNbtCompound);
 					
 					// Incrementing the stack's size
-					itemStack.increment(insertableItemCount);
+					itemStack.grow(insertableItemCount);
 					
 					// Updating the NbtCompound read from the bundle.
 					NbtHelpers.writeLargeItemStackNbt(itemStack, mergedItemStackNbtCompound);
@@ -204,7 +207,7 @@ public class StorageNbtHelpers {
 					// The process is roughly the same as above.
 					ItemStack stackCopy = addedStack.copy();
 					stackCopy.setCount(insertableItemCount);
-					NbtCompound stackNbtCompound = new NbtCompound();
+					CompoundTag stackNbtCompound = new CompoundTag();
 					NbtHelpers.writeLargeItemStackNbt(stackCopy, stackNbtCompound);
 					nbtList.add(0, stackNbtCompound);
 				}
@@ -243,7 +246,7 @@ public class StorageNbtHelpers {
 				// No items were stored in the list, this shouldn't normally happen, probably...
 				return Optional.empty();
 			} else {
-				NbtCompound extractedItemNbtCompound = nbtList.getCompound(0);
+				CompoundTag extractedItemNbtCompound = nbtList.getCompound(0);
 				ItemStack itemStack = NbtHelpers.readLargeItemStackFromNbt(extractedItemNbtCompound);
 				
 				nbtList.remove(0);
